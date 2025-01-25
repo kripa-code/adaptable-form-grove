@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FormConfig, FormField } from "@/types/form";
+import { FormConfig, FormField as IFormField } from "@/types/form";
 import { DndContext, DragEndEvent, closestCenter } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
 import { Card } from "@/components/ui/card";
@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import FieldTypes from "./FieldTypes";
-import FormField from "./FormField";
+import FormFieldComponent from "./FormField";
 import FormPreview from "./FormPreview";
 
 const FormBuilder = () => {
@@ -19,9 +19,9 @@ const FormBuilder = () => {
   });
 
   const handleAddField = (type: string) => {
-    const newField: FormField = {
+    const newField: IFormField = {
       id: crypto.randomUUID(),
-      type: type as FormField["type"],
+      type: type as IFormField["type"],
       label: `New ${type} field`,
       placeholder: "",
       required: false,
@@ -34,7 +34,7 @@ const FormBuilder = () => {
     toast.success("Field added successfully");
   };
 
-  const handleUpdateField = (id: string, updates: Partial<FormField>) => {
+  const handleUpdateField = (id: string, updates: Partial<IFormField>) => {
     setForm((prev) => ({
       ...prev,
       fields: prev.fields.map((field) =>
@@ -95,7 +95,7 @@ const FormBuilder = () => {
               <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                 <SortableContext items={form.fields} strategy={verticalListSortingStrategy}>
                   {form.fields.map((field) => (
-                    <FormField
+                    <FormFieldComponent
                       key={field.id}
                       field={field}
                       onUpdate={handleUpdateField}
